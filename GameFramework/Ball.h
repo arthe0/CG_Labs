@@ -3,6 +3,8 @@
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
 
+class PinPong;
+
 class Ball : public GeometryComponent
 {
 public:
@@ -13,6 +15,7 @@ public:
 	void IncreaseSpeed();
 	void Move(float deltaTime);
 	void GenerateRndDirection();
+	void ResetSpeed();
 
 	void Update() override;
 	
@@ -25,7 +28,9 @@ protected:
 
 
 private:
-	Engine* engine;
+	PinPong* pinPong;
+
+	float baseSpeed = 0.7f;
 	float speed = 0.7f;
 	float speedIncrement = 0.1f;
 	DirectX::XMFLOAT2 direction;

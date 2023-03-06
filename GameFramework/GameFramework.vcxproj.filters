@@ -101,7 +101,7 @@
     <ClInclude Include="Ball.h">
       <Filter>PinPong\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Strings.h">
+    <ClInclude Include="Announcments.h">
       <Filter>PinPong\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

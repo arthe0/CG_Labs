@@ -40,11 +40,13 @@ public:
 	float GetPosZ ();
 	DirectX::XMFLOAT4 GetPosition ();
 
+	DirectX::XMFLOAT4 position;
 protected:
 	LPCTSTR shaderPath = L"./Shaders/QuadShader.hlsl";
 	LPCTSTR shaderName = L"QuadShader.hlsl";
 
-	DirectX::XMFLOAT4 position;
+	
+	GeometryShape Shape;
 
 private:
 	ID3D11InputLayout* layout;
@@ -54,8 +56,6 @@ private:
 
 	ID3D11VertexShader* vertexShader;
 	ID3DBlob* vertexShaderByteCode;
-
-	GeometryShape Shape;
 
 	ID3D11RasterizerState* rastState;
 	

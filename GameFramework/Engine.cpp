@@ -36,7 +36,7 @@ Engine::Engine(LPCWSTR name, int screenWidth, int screenHeight) : Name(name), Fr
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		D3D11_CREATE_DEVICE_DEBUG,
+		D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT,
 		featureLevel,
 		1,
 		D3D11_SDK_VERSION,
@@ -127,6 +127,23 @@ void Engine::Run()
 		SwapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
 	}
 	Exit();
+}
+
+
+void Engine::DestroyResources()
+{
+	for (auto c : Components)
+	{
+		c->DestroyResources();
+	}
+}
+
+void Engine::Draw()
+{
+	for (auto c : Components)
+	{
+		c->Draw();
+	}
 }
 
 void Engine::EndFrame()

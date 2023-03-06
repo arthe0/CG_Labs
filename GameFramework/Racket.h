@@ -20,6 +20,8 @@ public:
     void Move(MovingDirection direction, float deltaTime);
     float speed = 1.f;
 
+    bool bCanMove = false;
+
     DirectX::BoundingBox collision;
 };
 
