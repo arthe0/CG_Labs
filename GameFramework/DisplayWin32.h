@@ -3,6 +3,7 @@
 #include <WinUser.h>
 #include <iostream>
 
+
 class DisplayWin32
 {
 

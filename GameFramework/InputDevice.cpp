@@ -1,20 +1,31 @@
 #include "InputDevice.h"
-#include "Game.h"
+#include "Engine.h"
 
-void InputDevice::OnKeyDown()
+InputDevice::InputDevice(Engine* e)
 {
+	keyboard = std::make_unique<DirectX::Keyboard>();
+	MousePosition.x = 0;
+	MousePosition.y = 0;
 }
 
-void InputDevice::OnMouseMove()
+bool InputDevice::IsKeyDown(DirectX::Keyboard::Keys key)
 {
+	if(!keyboard) return false;
+
+	bool result = keyboard->GetState().IsKeyDown(key);
+	if(result)
+	{
+		int a = 0;
+	}
+	return result;
 }
 
-void InputDevice::AddPressedKey()
+bool InputDevice::IsKeyUp(DirectX::Keyboard::Keys key)
 {
-}
+	if (!keyboard) return false;
 
-void InputDevice::IsKeyDown()
-{
+	auto result = keyboard->GetState().IsKeyUp(key);
+	return keyboard->GetState().IsKeyUp(key);
 }
 
 void InputDevice::RemovePressed()

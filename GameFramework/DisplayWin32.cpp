@@ -1,23 +1,26 @@
 #include "DisplayWin32.h"
-#include "Game.h"
+#include "Engine.h"
+#include "Keyboard.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{
-	case WM_KEYDOWN:
-	{
-		// If a key is pressed send it to the input object so it can record that state.
-		std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
 
-		if (static_cast<unsigned int>(wparam) == 27) PostQuitMessage(0);
-		return 0;
+	case WM_ACTIVATEAPP:
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+		DirectX::Keyboard::ProcessMessage(umessage, wparam, lparam);
+		break;
+
+	case WM_MENUCHAR:
+		// A menu is active and the user presses a key that does not correspond
+		// to any mnemonic or accelerator key. Ignore so we don't produce an error beep.
+		return MAKELRESULT(0, MNC_CLOSE);
+		break;
 	}
-	default:
-	{
-		return DefWindowProc(hwnd, umessage, wparam, lparam);
-	}
-	}
+
+	return DefWindowProc(hwnd, umessage, wparam, lparam);
 }
 
 DisplayWin32::DisplayWin32(LPCWSTR applicationName, HINSTANCE hInst, int screenWidth, int screenHeight)

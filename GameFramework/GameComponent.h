@@ -1,12 +1,12 @@
 #pragma once
 
-class Game;
+class Engine;
 
 class GameComponent
 {
 public:
-	Game* game;
-	GameComponent(Game* g);
+	Engine* engine;
+	GameComponent(Engine* e);
 	virtual ~GameComponent();
 
 	virtual void DestroyResources() = 0;

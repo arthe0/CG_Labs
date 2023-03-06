@@ -1,16 +1,17 @@
-#include "Game.h"
+#include "Engine.h"
 
-void Game::CreateBackBuffer()
+void Engine::CreateBackBuffer()
 {
 	auto res = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);	// __uuidof(ID3D11Texture2D)
 	res = Device->CreateRenderTargetView(backBuffer, nullptr, &RenderView);
 }
 
-Game::Game(LPCWSTR name, int screenWidth, int screenHeight) : Name(name), FrameCount(0), Components()
+Engine::Engine(LPCWSTR name, int screenWidth, int screenHeight) : Name(name), FrameCount(0), Components()
 {
 	Instance = GetModuleHandle(nullptr);
 
 	Display = new DisplayWin32(name, Instance, screenWidth, screenHeight);
+	inputDevice = new InputDevice(this);
 
 	D3D_FEATURE_LEVEL featureLevel[] = { D3D_FEATURE_LEVEL_11_1 };
 
@@ -54,22 +55,22 @@ Game::Game(LPCWSTR name, int screenWidth, int screenHeight) : Name(name), FrameC
 	CreateBackBuffer();
 }
 
-Game::~Game()
+Engine::~Engine()
 {
 	delete Display;
-	delete InputDevice;
+	delete inputDevice;
 	Context->Release();
 	backBuffer->Release();
 	RenderView->Release();
 	SwapChain->Release();
 }
 
-void Game::Exit()
+void Engine::Exit()
 {
 	DestroyResources();
 }
 
-void Game::MessageHandler(MSG& msg)
+void Engine::MessageHandler(MSG& msg)
 {
 	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) 
 	{
@@ -78,32 +79,31 @@ void Game::MessageHandler(MSG& msg)
 	}
 }
 
-void Game::RestoreTargets()
+void Engine::RestoreTargets()
 {
 }
 
-void Game::Run()
+void Engine::Run()
 {
 	Initialize();
 	MSG msg = {};
-	bool isExitRequested = false;
+	isExitRequested = false;
 	PrevTime = std::chrono::steady_clock::now();
+
 	while (!isExitRequested) 
 	{
-		// Handle the windows messages.
 		MessageHandler(msg);
 
-		// If windows signals to end the application then exit out.
 		if (msg.message == WM_QUIT)
 		{
 			isExitRequested = true;
 		}
 
 		auto	curTime = std::chrono::steady_clock::now();
-		float	deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(curTime - PrevTime).count() / 1000000.0f;
+		DeltaTime = std::chrono::duration_cast<std::chrono::microseconds>(curTime - PrevTime).count() / 1000000.0f;
 		PrevTime = curTime;
 
-		TotalTime += deltaTime;
+		TotalTime += DeltaTime;
 		FrameCount++;
 
 		if (TotalTime > 1.0f) 
@@ -121,9 +121,42 @@ void Game::Run()
 
 		Context->ClearState();
 		Context->OMSetRenderTargets(1, &RenderView, nullptr);
+		Update();
 		Draw();
 		Context->OMSetRenderTargets(0, nullptr, nullptr);
 		SwapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
 	}
 	Exit();
+}
+
+void Engine::EndFrame()
+{
+}
+
+void Engine::Initialize()
+{
+	for (auto c : Components)
+	{
+		c->Initialize();
+	}
+}
+
+void Engine::PrepareFrame()
+{
+}
+
+void Engine::PrepareResources()
+{
+}
+
+void Engine::Update()
+{
+	for (auto c : Components)
+	{
+		c->Update();
+	}
+}
+
+void Engine::UpdateInternal()
+{
 }

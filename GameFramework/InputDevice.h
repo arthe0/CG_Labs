@@ -1,24 +1,22 @@
 #pragma once
+#include "Keyboard.h"
+#include <DirectXMath.h>
 
-class Game;
+class Engine;
 
 class InputDevice
 {
 
-private:
-	Game* game;
-	int keys;
-
-protected:
-	virtual void OnKeyDown() = 0;
-	virtual void OnMouseMove() = 0;
-
 public:
-	int MouseMove;
-	int MouseOffset;
-	int MousePosition;
-	int MouseWheelID;
-	void AddPressedKey();
-	void IsKeyDown();
+	InputDevice(Engine* e);
+
+	DirectX::XMINT2 MousePosition;
+
+	bool IsKeyDown(DirectX::Keyboard::Keys key);
+	bool IsKeyUp(DirectX::Keyboard::Keys key);
 	void RemovePressed();
+
+private:
+	Engine* engine;
+	std::unique_ptr<DirectX::Keyboard> keyboard;
 };
